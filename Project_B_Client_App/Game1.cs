@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Project_B_Client_App.Content.Controllers;
+using Project_B_Client_App.Controllers;
 
 namespace Project_B_Client_App
 {
@@ -26,14 +26,16 @@ namespace Project_B_Client_App
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
             // Create player that spawns in the middle of the game window
-            GameObjectController.AddGameObject(
-                PlayerController.CreatePlayer(this.Content, new Vector2(
-                    _graphics.PreferredBackBufferWidth / 2,
-                    _graphics.PreferredBackBufferHeight / 2),
-                    "Sprites/player_sprite"));
-
+            // TODO: Clean up later how player is created
+            PlayerController.InitializePlayer(
+                this.Content, 
+                new Vector2(
+                    _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), 
+                "Sprites/player_sprite");
+            
+            GameController.InitializeGameInputs(Exit);
+            
             base.Initialize();
         }
 
@@ -68,9 +70,10 @@ namespace Project_B_Client_App
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            GameController.Update(gameTime);
+            
             // TODO input controller/state?
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
 
             // TODO: Add your update logic here
 
@@ -88,6 +91,7 @@ namespace Project_B_Client_App
             
             // Draw all game objects
             GameObjectController.DrawGameObjects(_spriteBatch);
+            PlayerController.DrawPlayer(_spriteBatch);
             
             base.Draw(gameTime);
         }

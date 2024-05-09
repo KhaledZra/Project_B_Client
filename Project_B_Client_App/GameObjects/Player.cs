@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Interface;
@@ -13,6 +14,12 @@ public class Player(
 {
     public float GetSpeed => moveSpeed;
     
+    public void Move(Vector2 direction, float deltaTime)
+    {
+        position2D += direction * (moveSpeed * deltaTime);
+        rotation = TranslateDirectionToRotation(direction);
+    }
+    
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(
@@ -25,5 +32,10 @@ public class Player(
             Vector2.One / 3f,
             SpriteEffects.None,
             layerDepth);
+    }
+    
+    private float TranslateDirectionToRotation(Vector2 direction)
+    {
+        return (float)Math.Atan2(direction.Y, direction.X);
     }
 }

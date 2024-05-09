@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using System;
+using System.Threading.Channels;
+using Microsoft.AspNetCore.SignalR.Client;
 
 // var hubConnection = new HubConnectionBuilder()
 //     // Change this to property
@@ -16,5 +18,6 @@
 //
 // await hubConnection.StartAsync();
 
+Console.WriteLine("Starting the game!");
 using var game = new Project_B_Client_App.Game1();
 game.Run();

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Interface;
 
-namespace Project_B_Client_App.Content.Controllers;
+namespace Project_B_Client_App.Controllers;
 
 // Manages all GameObjects
 public static class GameObjectController
