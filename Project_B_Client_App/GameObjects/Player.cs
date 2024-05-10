@@ -8,11 +8,19 @@ namespace Project_B_Client_App.GameObjects;
 // The player object
 public class Player(
     Texture2D texture2D, Vector2 position2D, float rotation, string assetName, float layerDepth,
+    string playerName,
     float moveSpeed = 100f) :
     GameObject(texture2D, position2D, rotation, assetName, layerDepth),
     IDawableObject
 {
     public float GetSpeed => moveSpeed;
+    public string GetPlayerName => playerName;
+    public Vector2 GetPlayerPosition => position2D;
+    public float GetRotation => rotation;
+    
+    // This needs to be reworked to work with Move() below
+    public void SetPosition2D(Vector2 position) => position2D = position;
+    public void SetRotation(float rotationRadians) => rotation = rotationRadians;
     
     public void Move(Vector2 direction, float deltaTime)
     {

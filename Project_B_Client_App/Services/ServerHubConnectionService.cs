@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Xna.Framework;
+using Project_B_Client_App.Controllers;
+using Project_B_Client_App.Payloads;
+
+namespace Project_B_Client_App.Services;
+
+public class ServerHubConnectionService
+{
+    private readonly HubConnection _hubConnection;
+    private const string Url = "http://localhost:5013/chathub"; //"https://project-b-server-081b429cac7e.herokuapp.com/chathub"; 
+    
+    public ServerHubConnectionService()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Url)
+            .Build();
+    }
+    
+    public async Task StartConnection()
+    {
+        await _hubConnection.StartAsync();
+        // Tell server this player has connected
+        await _hubConnection.InvokeAsync("SendClientInfo", PlayerController.GetPlayerName());
+    }
+
+    public async Task StopConnection()
+    {
+        await _hubConnection.StopAsync();
+    }
+
+    public string GetState()
+    {
+        return _hubConnection.State.ToString();
+    }
+    
+    public async Task SendMessage(string user, string message)
+    {
+        await _hubConnection.InvokeAsync("SendMessage", user, message);
+    }
+    
+    public async Task SendPlayerInfo(string user, Vector2 playerPosition, float rotationRadians)
+    {
+        await _hubConnection.InvokeAsync("SendPosition", user, playerPosition.X, playerPosition.Y, rotationRadians);
+    }
+
+    public async Task<List<string>> SendClientsInfoToCaller()
+    {
+        var tcs = new TaskCompletionSource<List<string>>();
+
+        _hubConnection.On<List<string>>("ReceiveClientsInfo", (clientsInfo) =>
+        {
+            _hubConnection.Remove("ReceiveClientsInfo"); // remove the handler after it's called
+            tcs.SetResult(clientsInfo);
+        });
+
+        return await tcs.Task; // this will complete when the "ReceiveClientsInfo" handler is called
+    }
+
+    public void ListenToReceivePosition(Action<ReceivePositionPayload> handler)
+    {
+        _hubConnection.On("ReceivePosition", (string user, float x, float y, float rotationRadians) =>
+            handler(new ReceivePositionPayload(user, x, y, rotationRadians)));
+    }
+    
+    public void ListenToReceiveNewClientNotification(Action<string> handler)
+    {
+        _hubConnection.On("ReceiveNewClientNotification", handler);
+    }
+}

@@ -6,11 +6,11 @@ namespace Project_B_Client_App.Controllers;
 
 public static class InputController
 {
-    private static Dictionary<Keys, Action> _inputActions = new();
+    private static Dictionary<Keys, List<Action>> _inputActions = new();
     
-    public static void AddInputAction(Keys key, Action action)
+    public static void AddInputAction(Keys key, List<Action> actions)
     {
-        _inputActions.Add(key, action);
+        _inputActions.Add(key, actions);
     }
     
     public static void OnInputAction(Keys[] keys)
@@ -19,7 +19,8 @@ public static class InputController
         {
             if (_inputActions.ContainsKey(key))
             {
-                _inputActions[key]();
+                // Run all stored actions for the key
+                _inputActions[key].ForEach(action => action());
             }
         }
     }

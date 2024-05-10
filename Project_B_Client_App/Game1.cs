@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project_B_Client_App.Controllers;
@@ -9,12 +11,15 @@ namespace Project_B_Client_App
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private readonly Vector2 _middleOfScreen;
+
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _middleOfScreen = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
         }
 
         /// <summary>
@@ -26,12 +31,12 @@ namespace Project_B_Client_App
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            
             // Create player that spawns in the middle of the game window
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content, 
-                new Vector2(
-                    _graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2), 
+                _middleOfScreen, 
                 "Sprites/player_sprite");
             
             GameController.InitializeGameInputs(Exit);
@@ -70,12 +75,24 @@ namespace Project_B_Client_App
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // TODO: Maybe group up the connection stuff to a separate method and call it here to reduce clutter and make a call order.
+            // Will run one time and connect to the server, needs to be checked until it is connected.
+            GameController.ConnectToServer();
+            
+            // If connected to the server, checks the player info sent to the server to see if they are done.
+            // This also only runs if the player is connected to the server.
+            GameController.CheckServerPlayerInfoCalls();
+            
+            // TODO: Fix up to be a better way to update other players
+            GameController.AddNewConnectedOtherPlayer(this.Content, _middleOfScreen);
+            GameController.UpdateOtherPlayers();
+            
             GameController.Update(gameTime);
             
-            // TODO input controller/state?
             InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
-
-            // TODO: Add your update logic here
+            
+            // Currently will only be done once but needs to be checked a few times until the async call is done.
+            GameController.SyncAlreadyConnectedPlayers(this.Content, _middleOfScreen);
 
             base.Update(gameTime);
         }
@@ -90,8 +107,11 @@ namespace Project_B_Client_App
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             // Draw all game objects
+            _spriteBatch.Begin();
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
+            GameController.OtherPlayers.ForEach(player => player.Draw(_spriteBatch));
+            _spriteBatch.End();
             
             base.Draw(gameTime);
         }

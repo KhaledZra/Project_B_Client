@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,14 +17,17 @@ public static class PlayerController
             position2D,
             0f,
             assetName,
-            0f);
+            0f,
+            new Random(Guid.NewGuid().GetHashCode()).Next().ToString()); // TODO: Change later to get the player name from the UI
     }
+
+    public static string GetPlayerName() => _player.GetPlayerName;
+    public static Vector2 GetPlayerPosition() => _player.GetPlayerPosition;
+    public static float GetPlayerRotation() => _player.GetRotation;
 
     public static void DrawPlayer(SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin();
         _player.Draw(spriteBatch);
-        spriteBatch.End();
     }
 
 

@@ -18,7 +18,6 @@ public static class GameObjectController
     
     public static void DrawGameObjects(SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin();
         foreach (var gameObject in _gameObjects)
         {
             if (gameObject is IDawableObject drawableObject)
@@ -26,7 +25,6 @@ public static class GameObjectController
                 drawableObject.Draw(spriteBatch);
             }
         }
-        spriteBatch.End();
     }
     
     public static void LoadGameObjectsTextures(ContentManager content)
