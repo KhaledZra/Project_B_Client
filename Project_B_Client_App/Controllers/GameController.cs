@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Services;
+using Serilog;
 
 namespace Project_B_Client_App.Controllers;
 
@@ -35,15 +36,21 @@ public static class GameController
                 var clients = _serverClientSync.Result;
                 // Clear this as we are going to refill it with the current active players
                 OtherPlayers.Clear();
-                Console.WriteLine("clients.Count: " + clients.Count);
+                Log.Information("clients.Count: " + clients.Count);
                 
                 clients.ForEach(client =>
                 {
                     // Incase the client is the current player
                     if (!client.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
-                        Player player = new Player(content.Load<Texture2D>("Sprites/player_sprite"),
-                            spawnPoint, 0f, "Sprites/player_sprite", 0f, client);
+                        Player player = new Player(
+                            content.Load<Texture2D>("Sprites/player_sprite"),
+                            spawnPoint,
+                            0f,
+                            "Sprites/player_sprite",
+                            0f,
+                            client);
+                        
                         OtherPlayers.Add(player);
                     }
                 });
@@ -65,7 +72,7 @@ public static class GameController
                 if (payload.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
                 if (OtherPlayers.Exists(p =>
                         payload.Equals(p.GetPlayerName, StringComparison.OrdinalIgnoreCase))) return;
-                Console.WriteLine("New player connected: " + payload);
+                Log.Information("New player connected: " + payload);
                 
                 // Create a new player
                 Player player = new Player(content.Load<Texture2D>("Sprites/player_sprite"),
@@ -128,8 +135,8 @@ public static class GameController
                     _isConnected = true;
                 
                 _serverCall = null;
-                Console.WriteLine("Server call is done!");
-                Console.WriteLine(_serverHubConnectionService.GetState());
+                Log.Information("Server call is done!");
+                Log.Information(_serverHubConnectionService.GetState());
             }
         }
     }
