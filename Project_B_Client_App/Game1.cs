@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.Handlers;
 
 namespace Project_B_Client_App
 {
@@ -40,6 +41,11 @@ namespace Project_B_Client_App
                 "Sprites/player_sprite");
             
             GameController.InitializeGameInputs(Exit);
+            
+            // Register Handlers
+            ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content, _middleOfScreen);
+            ServerHubHandler.UpdateOtherPlayersHandler();
+            ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content, _middleOfScreen);
             
             base.Initialize();
         }
@@ -83,16 +89,9 @@ namespace Project_B_Client_App
             // This also only runs if the player is connected to the server.
             GameController.CheckServerPlayerInfoCalls();
             
-            // TODO: Fix up to be a better way to update other players
-            GameController.AddNewConnectedOtherPlayer(this.Content, _middleOfScreen);
-            GameController.UpdateOtherPlayers();
-            
             GameController.Update(gameTime);
             
             InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
-            
-            // Currently will only be done once but needs to be checked a few times until the async call is done.
-            GameController.SyncAlreadyConnectedPlayers(this.Content, _middleOfScreen);
 
             base.Update(gameTime);
         }

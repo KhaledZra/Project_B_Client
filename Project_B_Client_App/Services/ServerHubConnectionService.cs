@@ -25,6 +25,7 @@ public class ServerHubConnectionService
         await _hubConnection.StartAsync();
         // Tell server this player has connected
         await _hubConnection.InvokeAsync("SendClientInfo", PlayerController.GetPlayerName());
+        await _hubConnection.InvokeAsync("SendClientsInfoToCaller");
     }
 
     public async Task StopConnection()
@@ -47,18 +48,8 @@ public class ServerHubConnectionService
         await _hubConnection.InvokeAsync("SendPosition", user, playerPosition.X, playerPosition.Y, rotationRadians);
     }
 
-    public async Task<List<string>> SendClientsInfoToCaller()
-    {
-        var tcs = new TaskCompletionSource<List<string>>();
-
-        _hubConnection.On<List<string>>("ReceiveClientsInfo", (clientsInfo) =>
-        {
-            _hubConnection.Remove("ReceiveClientsInfo"); // remove the handler after it's called
-            tcs.SetResult(clientsInfo);
-        });
-
-        return await tcs.Task; // this will complete when the "ReceiveClientsInfo" handler is called
-    }
+    public void ListenToGetOtherConnectedClients(Action<List<string>> handler) =>
+        _hubConnection.On("ReceiveClientsInfo", handler);
 
     public void ListenToReceivePosition(Action<ReceivePositionPayload> handler)
     {
