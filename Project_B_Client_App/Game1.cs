@@ -46,6 +46,7 @@ namespace Project_B_Client_App
             ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content, _middleOfScreen);
             ServerHubHandler.UpdateOtherPlayersHandler();
             ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content, _middleOfScreen);
+            ServerHubHandler.RemoveDisconnectedOtherPlayerHandler();
             
             base.Initialize();
         }

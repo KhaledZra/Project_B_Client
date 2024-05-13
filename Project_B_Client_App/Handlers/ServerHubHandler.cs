@@ -89,4 +89,25 @@ public class ServerHubHandler
             }
         });
     }
+    
+    public static void RemoveDisconnectedOtherPlayerHandler()
+    {
+        GameController.ServerHubConnectionService.ListenToReceiveClientDisconnectedNotification(payload =>
+        {
+            if (!string.IsNullOrWhiteSpace(payload))
+            {
+                // Ignore if it's about the client player, should not really happen but just in case.
+                if (payload.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
+                Log.Information("Player disconnected: " + payload);
+
+                // Find the player
+                Player player = GameController.OtherPlayers.Find(p =>
+                    p.GetPlayerName.Equals(payload, StringComparison.OrdinalIgnoreCase));
+                if (player is not null)
+                {
+                    GameController.OtherPlayers.Remove(player);
+                }
+            }
+        });
+    }
 }

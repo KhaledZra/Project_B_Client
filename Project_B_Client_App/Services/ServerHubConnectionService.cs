@@ -11,7 +11,8 @@ namespace Project_B_Client_App.Services;
 public class ServerHubConnectionService
 {
     private readonly HubConnection _hubConnection;
-    private const string Url = "http://localhost:5013/chathub"; //"https://project-b-server-081b429cac7e.herokuapp.com/chathub"; 
+    // private const string Url = "https://project-b-server-081b429cac7e.herokuapp.com/chathub";
+    private const string Url = "http://localhost:5013/chathub";
     
     public ServerHubConnectionService()
     {
@@ -48,8 +49,10 @@ public class ServerHubConnectionService
         await _hubConnection.InvokeAsync("SendPosition", user, playerPosition.X, playerPosition.Y, rotationRadians);
     }
 
-    public void ListenToGetOtherConnectedClients(Action<List<string>> handler) =>
+    public void ListenToGetOtherConnectedClients(Action<List<string>> handler)
+    {
         _hubConnection.On("ReceiveClientsInfo", handler);
+    }
 
     public void ListenToReceivePosition(Action<ReceivePositionPayload> handler)
     {
@@ -60,5 +63,10 @@ public class ServerHubConnectionService
     public void ListenToReceiveNewClientNotification(Action<string> handler)
     {
         _hubConnection.On("ReceiveNewClientNotification", handler);
+    }
+    
+    public void ListenToReceiveClientDisconnectedNotification(Action<string> handler)
+    {
+        _hubConnection.On("ReceiveClientDisconnectedNotification", handler);
     }
 }
