@@ -18,7 +18,6 @@ public static class GameController
     public static readonly ServerHubConnectionService ServerHubConnectionService = new();
     private static Task _serverCall = ServerHubConnectionService.StartConnection();
     private static bool _isConnected = false;
-    private static bool _isOtherPlayerSyncNeeded = true;
     private static List<Task> _serverPlayerInfoCalls = new();
 
     // Todo: maybe move this to it's own class
@@ -60,6 +59,7 @@ public static class GameController
         }
     }
 
+    // Updates the server with player info
     public static void SendPlayerInfoToServer()
     {
         if (_isConnected)

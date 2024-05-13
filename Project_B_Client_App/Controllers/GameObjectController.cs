@@ -20,7 +20,7 @@ public static class GameObjectController
     {
         foreach (var gameObject in _gameObjects)
         {
-            if (gameObject is IDawableObject drawableObject)
+            if (gameObject is IDrawableObject drawableObject)
             {
                 drawableObject.Draw(spriteBatch);
             }

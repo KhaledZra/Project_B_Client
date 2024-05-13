@@ -11,7 +11,7 @@ public class Player(
     string playerName,
     float moveSpeed = 100f) :
     GameObject(texture2D, position2D, rotation, assetName, layerDepth),
-    IDawableObject
+    IDrawableObject
 {
     public float GetSpeed => moveSpeed;
     public string GetPlayerName => playerName;

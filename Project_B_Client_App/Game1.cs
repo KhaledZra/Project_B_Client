@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.ViewportAdapters;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Handlers;
 
 namespace Project_B_Client_App
@@ -13,7 +16,10 @@ namespace Project_B_Client_App
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private readonly Vector2 _middleOfScreen;
-
+        private OrthographicCamera _camera;
+        
+        // TODO: Testing
+        private Floor _floor;
 
         public Game1()
         {
@@ -37,8 +43,15 @@ namespace Project_B_Client_App
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content, 
-                _middleOfScreen, 
+                Vector2.Zero,
                 "Sprites/player_sprite");
+
+            _floor = new Floor(
+                this.Content.Load<Texture2D>("Sprites/Floor/grass_tileset"),
+                _middleOfScreen,
+                0f, 
+                "Sprites/Floor/grass_tileset",
+                0f);
             
             GameController.InitializeGameInputs(Exit);
             
@@ -49,6 +62,9 @@ namespace Project_B_Client_App
             ServerHubHandler.RemoveDisconnectedOtherPlayerHandler();
             
             base.Initialize();
+            
+            var viewportadapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            _camera = new OrthographicCamera(viewportadapter);
         }
 
         /// <summary>
@@ -86,6 +102,9 @@ namespace Project_B_Client_App
             // Will run one time and connect to the server, needs to be checked until it is connected.
             GameController.ConnectToServer();
             
+            // Camera logic
+            _camera.LookAt(PlayerController.GetPlayerPosition());
+            
             // If connected to the server, checks the player info sent to the server to see if they are done.
             // This also only runs if the player is connected to the server.
             GameController.CheckServerPlayerInfoCalls();
@@ -107,7 +126,8 @@ namespace Project_B_Client_App
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             // Draw all game objects
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
+            _floor.Draw(_spriteBatch);
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
             GameController.OtherPlayers.ForEach(player => player.Draw(_spriteBatch));
