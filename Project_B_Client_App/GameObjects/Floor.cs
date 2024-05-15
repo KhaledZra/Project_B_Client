@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Interface;
 
-namespace Project_B_Client_App.GameObjects;
+namespace Project_B_Client_App.Controllers;
 
 public class Floor(Texture2D texture2D, Vector2 position2D, float rotation, string assetName, float layerDepth) :
     GameObject(texture2D, position2D, rotation, assetName, layerDepth), IDrawableObject

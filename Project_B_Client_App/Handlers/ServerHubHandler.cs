@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
-using Project_B_Client_App.GameObjects;
 using Serilog;
 
 namespace Project_B_Client_App.Handlers;
@@ -38,7 +37,8 @@ public class ServerHubHandler
                             0f,
                             "Sprites/player_sprite",
                             0f,
-                            client);
+                            client,
+                            content);
 
                         GameController.OtherPlayers.Add(player);
                     }
@@ -84,7 +84,8 @@ public class ServerHubHandler
 
                 // Create a new player
                 Player player = new Player(content.Load<Texture2D>("Sprites/player_sprite"),
-                    new Vector2(spawnPoint.X, spawnPoint.Y), 0f, "Sprites/player_sprite", 0f, payload);
+                    new Vector2(spawnPoint.X, spawnPoint.Y), 0f, "Sprites/player_sprite",
+                    0f, payload, content);
                 GameController.OtherPlayers.Add(player);
             }
         });

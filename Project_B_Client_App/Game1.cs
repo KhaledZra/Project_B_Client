@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Content;
+using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.ViewportAdapters;
@@ -18,6 +20,8 @@ namespace Project_B_Client_App
         private OrthographicCamera _camera;
         private TiledMap _tiledMap;
         private TiledMapRenderer _tiledMapRenderer;
+
+        //private TestObject _testObject;
 
         public Game1()
         {
@@ -48,6 +52,8 @@ namespace Project_B_Client_App
                 this.Content, 
                 Vector2.Zero,
                 "Sprites/player_sprite");
+
+            //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
             
             GameController.InitializeGameInputs(Exit);
             
@@ -104,6 +110,12 @@ namespace Project_B_Client_App
             // Camera logic
             _camera.LookAt(PlayerController.GetPlayerPosition());
             
+            // Animation logic
+            //PlayerController.DrawPlayer(_spriteBatch);
+            InputController.Update();
+            PlayerController.Update(gameTime);
+            //_testObject.Update(gameTime);
+            
             _tiledMapRenderer.Update(gameTime);
             
             // If connected to the server, checks the player info sent to the server to see if they are done.
@@ -112,7 +124,7 @@ namespace Project_B_Client_App
             
             GameController.Update(gameTime);
             
-            InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
+            // InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
 
             base.Update(gameTime);
         }
@@ -132,6 +144,7 @@ namespace Project_B_Client_App
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
             GameController.OtherPlayers.ForEach(player => player.Draw(_spriteBatch));
+            //_testObject.Draw(_spriteBatch);
             _spriteBatch.End();
             
             base.Draw(gameTime);

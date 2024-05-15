@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Project_B_Client_App.GameObjects;
+using Project_B_Client_App.Controllers;
 using Project_B_Client_App.Services;
 using Serilog;
 
@@ -33,13 +33,13 @@ public static class GameController
     {
         // Initialize the game inputs
         // Movement
-        InputController.AddInputAction(Keys.W, [PlayerController.MovePlayerForward, SendPlayerInfoToServer]);
-        InputController.AddInputAction(Keys.S, [PlayerController.MovePlayerBackward, SendPlayerInfoToServer]);
-        InputController.AddInputAction(Keys.D, [PlayerController.MovePlayerRight, SendPlayerInfoToServer]);
-        InputController.AddInputAction(Keys.A, [PlayerController.MovePlayerLeft, SendPlayerInfoToServer]);
-
-        // Exit
-        InputController.AddInputAction(Keys.Escape, [exitGame]);
+        // InputController.AddInputAction(Keys.W, [PlayerController.MovePlayerForward, SendPlayerInfoToServer]);
+        // InputController.AddInputAction(Keys.S, [PlayerController.MovePlayerBackward, SendPlayerInfoToServer]);
+        // InputController.AddInputAction(Keys.D, [PlayerController.MovePlayerRight, SendPlayerInfoToServer]);
+        // InputController.AddInputAction(Keys.A, [PlayerController.MovePlayerLeft, SendPlayerInfoToServer]);
+        //
+        // // Exit
+        // InputController.AddInputAction(Keys.Escape, [exitGame]);
     }
 
     public static void ConnectToServer()
