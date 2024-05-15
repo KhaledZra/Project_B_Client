@@ -10,9 +10,17 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\..\..\..\.nuget\packages\monogame.extended.content.pipeline\3.8.0\tools\MonoGame.Extended.Content.Pipeline.dll
+/reference:..\Libraries\Extended\MonoGame.Extended.dll
+/reference:..\Libraries\Extended\MonoGame.Extended.Tiled.dll
+/reference:..\Libraries\Extended\MonoGame.Extended.Content.Pipeline.dll
+/reference:..\Libraries\Extended\MonoGame.Extended.Graphics.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin Map/samplemap.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Map/samplemap.tmx
 
 #begin Sprites/Floor/grass_tileset.png
 /importer:TextureImporter

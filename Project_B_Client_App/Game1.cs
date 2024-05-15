@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.ViewportAdapters;
 using Project_B_Client_App.Controllers;
-using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Handlers;
 
 namespace Project_B_Client_App
@@ -17,13 +16,17 @@ namespace Project_B_Client_App
         private SpriteBatch _spriteBatch;
         private readonly Vector2 _middleOfScreen;
         private OrthographicCamera _camera;
-        
-        // TODO: Testing
-        private Floor _floor;
+        private TiledMap _tiledMap;
+        private TiledMapRenderer _tiledMapRenderer;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            // Client size setup
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
+            
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             _middleOfScreen = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
@@ -45,13 +48,6 @@ namespace Project_B_Client_App
                 this.Content, 
                 Vector2.Zero,
                 "Sprites/player_sprite");
-
-            _floor = new Floor(
-                this.Content.Load<Texture2D>("Sprites/Floor/grass_tileset"),
-                _middleOfScreen,
-                0f, 
-                "Sprites/Floor/grass_tileset",
-                0f);
             
             GameController.InitializeGameInputs(Exit);
             
@@ -63,7 +59,8 @@ namespace Project_B_Client_App
             
             base.Initialize();
             
-            var viewportadapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            // Camera setup
+            var viewportadapter = new BoxingViewportAdapter(Window, GraphicsDevice, 400, 240);
             _camera = new OrthographicCamera(viewportadapter);
         }
 
@@ -73,9 +70,11 @@ namespace Project_B_Client_App
         /// </summary>
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
+            _tiledMap = Content.Load<TiledMap>("Map/samplemap");
+            _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
+            
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             
             // TODO: This might be redundant. Keep an eye on this
             GameObjectController.LoadGameObjectsTextures(this.Content);
@@ -105,6 +104,8 @@ namespace Project_B_Client_App
             // Camera logic
             _camera.LookAt(PlayerController.GetPlayerPosition());
             
+            _tiledMapRenderer.Update(gameTime);
+            
             // If connected to the server, checks the player info sent to the server to see if they are done.
             // This also only runs if the player is connected to the server.
             GameController.CheckServerPlayerInfoCalls();
@@ -127,7 +128,7 @@ namespace Project_B_Client_App
             
             // Draw all game objects
             _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
-            _floor.Draw(_spriteBatch);
+            _tiledMapRenderer.Draw(_camera.GetViewMatrix());
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
             GameController.OtherPlayers.ForEach(player => player.Draw(_spriteBatch));
