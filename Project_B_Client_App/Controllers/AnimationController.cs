@@ -33,7 +33,6 @@ public class AnimationController
 
     public void Draw(Vector2 position, SpriteBatch spriteBatch)
     {
-        Console.WriteLine($"Adding animation for {_lastKey}");
         _anims[_lastKey].Draw(position, spriteBatch);
     }
 }

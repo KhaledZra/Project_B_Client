@@ -50,7 +50,7 @@ namespace Project_B_Client_App
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content, 
-                Vector2.Zero,
+                _middleOfScreen,
                 "Sprites/player_sprite");
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
@@ -58,8 +58,8 @@ namespace Project_B_Client_App
             GameController.InitializeGameInputs(Exit);
             
             // Register Handlers
-            ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content, _middleOfScreen);
-            ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content, _middleOfScreen);
+            ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content);
+            ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content);
             ServerHubHandler.UpdateOtherPlayersHandler();
             ServerHubHandler.RemoveDisconnectedOtherPlayerHandler();
             
@@ -139,7 +139,7 @@ namespace Project_B_Client_App
             _tiledMapRenderer.Draw(_camera.GetViewMatrix());
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
-            GameController.OtherPlayers.ForEach(player => player.Draw(_spriteBatch));
+            GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch));
             //_testObject.Draw(_spriteBatch);
             _spriteBatch.End();
             

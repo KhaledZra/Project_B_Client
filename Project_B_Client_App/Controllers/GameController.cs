@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Services;
 using Serilog;
 
@@ -19,7 +20,7 @@ public static class GameController
     private static List<Task> _serverPlayerInfoCalls = new();
 
     // Todo: maybe move this to it's own class
-    public static List<Player> OtherPlayers { get; set; } = new();
+    public static List<OtherPlayer> OtherPlayers { get; set; } = new();
 
     public static void InitializeGameInputs(Action exitGame)
     {

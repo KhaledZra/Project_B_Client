@@ -1,44 +1,49 @@
 using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.GameObjects;
+using Project_B_Client_App.Payloads;
 using Serilog;
 
 namespace Project_B_Client_App.Handlers;
 
 public class ServerHubHandler
 {
-    // TODO: in the future in the server side, the server will send the spawn point
-    public static void SyncAlreadyConnectedPlayersHandler(ContentManager content, Vector2 spawnPoint)
+    public static void SyncAlreadyConnectedPlayersHandler(ContentManager content)
     {
         GameController.ServerHubConnectionService.ListenToGetOtherConnectedClients(
             payload =>
             {
+                Log.Information("Received clients info: " + payload);
+                List<ClientPayload> clientPayloads = JsonSerializer.Deserialize<List<ClientPayload>>(payload);
                 // Clear this as we are going to refill it with the current active players
                 GameController.OtherPlayers.Clear();
-                Log.Information("clients.Count: " + payload.Count);
+                Log.Information("clients.Count: " + clientPayloads.Count);
 
-                payload.ForEach(client =>
+                clientPayloads.ForEach(client =>
                 {
                     // Incase the client is the current player
-                    if (!client.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
+                    if (!client.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
-                        Player player = new Player(
-                            content.Load<Texture2D>("Animation/player1_spritesheet"),
-                            spawnPoint,
+                        OtherPlayer otherPlayer = new OtherPlayer(
+                            content.Load<Texture2D>("Sprites/player_sprite"),
+                            new Vector2(client.PositionX, client.PositionY),
                             0f,
-                            "Animation/player1_spritesheet",
+                            "Sprites/player_sprite",
                             0f,
-                            client,
+                            client.ClientName,
                             content);
 
-                        GameController.OtherPlayers.Add(player);
+                        GameController.OtherPlayers.Add(otherPlayer);
                     }
                 });
             });
     }
-    
+
     public static void UpdateOtherPlayersHandler()
     {
         // When the server sends a position, update the player position
@@ -50,7 +55,7 @@ public class ServerHubHandler
                 if (!payload.User.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                 {
                     // Find the player
-                    Player player = GameController.OtherPlayers.Find(p =>
+                    OtherPlayer player = GameController.OtherPlayers.Find(p =>
                         p.GetPlayerName.Equals(payload.User, StringComparison.OrdinalIgnoreCase));
                     if (player is not null)
                     {
@@ -63,30 +68,30 @@ public class ServerHubHandler
             }
         });
     }
-    
-    public static void AddNewConnectedOtherPlayerHandler(ContentManager content, Vector2 spawnPoint)
+
+    public static void AddNewConnectedOtherPlayerHandler(ContentManager content)
     {
         GameController.ServerHubConnectionService.ListenToReceiveNewClientNotification(payload =>
         {
-            if (!string.IsNullOrWhiteSpace(payload))
-            {
-                // Ignore if it's about the client player or the payload is already processed
-                if (payload.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
-                // Todo: remove this if everything works like normal!
-                // if (OtherPlayers.Exists(p =>
-                //         payload.Equals(p.GetPlayerName, StringComparison.OrdinalIgnoreCase))) return;
-                Log.Information("New player connected: " + payload);
+            // Ignore if it's about the client player or the payload is already processed
+            if (payload.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
+            Log.Information("New player connected: " + payload);
 
-                // Create a new player
-                Player player = new Player(content.Load<Texture2D>("Animation/player1_spritesheet"),
-                    new Vector2(spawnPoint.X, spawnPoint.Y), 0f, "Animation/player1_spritesheet",
-                    0f, payload, content);
-                GameController.OtherPlayers.Add(player);
-                Log.Information($"Player added to the list! {GameController.OtherPlayers.Count}");
-            }
+            // Create a new player
+            OtherPlayer player = new OtherPlayer(
+                content.Load<Texture2D>("Sprites/player_sprite"),
+                new Vector2(payload.PositionX, payload.PositionY),
+                0f,
+                "Sprites/player_sprite",
+                0f,
+                payload.ClientName,
+                content);
+
+            GameController.OtherPlayers.Add(player);
+            Log.Information($"Player added to the list! {GameController.OtherPlayers.Count}");
         });
     }
-    
+
     public static void RemoveDisconnectedOtherPlayerHandler()
     {
         GameController.ServerHubConnectionService.ListenToReceiveClientDisconnectedNotification(payload =>
@@ -98,7 +103,7 @@ public class ServerHubHandler
                 Log.Information("Player disconnected: " + payload);
 
                 // Find the player
-                Player player = GameController.OtherPlayers.Find(p =>
+                OtherPlayer player = GameController.OtherPlayers.Find(p =>
                     p.GetPlayerName.Equals(payload, StringComparison.OrdinalIgnoreCase));
                 if (player is not null)
                 {
