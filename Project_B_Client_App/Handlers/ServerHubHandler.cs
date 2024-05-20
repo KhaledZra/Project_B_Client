@@ -30,13 +30,12 @@ public class ServerHubHandler
                     if (!client.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
                         OtherPlayer otherPlayer = new OtherPlayer(
-                            content.Load<Texture2D>("Sprites/player_sprite"),
+                            content.Load<Texture2D>("Animation/player1_spritesheet"),
                             new Vector2(client.PositionX, client.PositionY),
                             0f,
-                            "Sprites/player_sprite",
+                            "Animation/player1_spritesheet",
                             0f,
-                            client.ClientName,
-                            content);
+                            client.ClientName);
 
                         GameController.OtherPlayers.Add(otherPlayer);
                     }
@@ -79,13 +78,12 @@ public class ServerHubHandler
 
             // Create a new player
             OtherPlayer player = new OtherPlayer(
-                content.Load<Texture2D>("Sprites/player_sprite"),
+                content.Load<Texture2D>("Animation/player1_spritesheet"),
                 new Vector2(payload.PositionX, payload.PositionY),
                 0f,
-                "Sprites/player_sprite",
+                "Animation/player1_spritesheet",
                 0f,
-                payload.ClientName,
-                content);
+                payload.ClientName);
 
             GameController.OtherPlayers.Add(player);
             Log.Information($"Player added to the list! {GameController.OtherPlayers.Count}");
