@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using MonoGame.Extended.Content;
-using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.ViewportAdapters;
@@ -120,7 +117,7 @@ namespace Project_B_Client_App
             // If connected to the server, checks the player info sent to the server to see if they are done.
             // This also only runs if the player is connected to the server.
             GameController.CheckServerPlayerInfoCalls();
-            //GameController.OtherPlayers.ForEach(player => player.ForceUpdate(gameTime, Vector2.Zero));
+            GameController.OtherPlayers.ForEach(op => op.Update(gameTime));
 
             base.Update(gameTime);
         }

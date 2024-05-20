@@ -59,9 +59,7 @@ public class ServerHubHandler
                     if (player is not null)
                     {
                         Console.WriteLine("Received position: " + payload.User + " " + payload.Direction);
-                        player.SetPosition2D(new Vector2(payload.X, payload.Y));
-                        player.SetRotation(payload.RotationRadians);
-                        // player.ForceUpdate(Globals.GameTime, payload.Direction);
+                        player.SetDirection(payload.Direction);
                     }
                 }
             }

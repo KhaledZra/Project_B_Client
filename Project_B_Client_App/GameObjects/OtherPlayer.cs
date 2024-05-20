@@ -15,6 +15,10 @@ public class OtherPlayer : GameObject, IDrawableObject
     private readonly float _layerDepth;
     private readonly AnimationController _anims;
     
+    // Movement
+    private Vector2 _direction;
+    public Vector2 SetDirection(Vector2 direction) => _direction = direction;
+    
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
     public Vector2 GetPlayerPosition => _position;
@@ -43,6 +47,19 @@ public class OtherPlayer : GameObject, IDrawableObject
     
     public void SetPosition2D(Vector2 position) => _position = position;
     public void SetRotation(float rotationRadians) => _rotation = rotationRadians;
+    
+    public void Update(GameTime gameTime)
+    {
+        if (_direction != Vector2.Zero)
+        {
+            _position += Vector2.Normalize(_direction) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        
+        _anims.Update(_direction, gameTime);
+        
+        // Reset
+        _direction = Vector2.Zero;
+    }
     
     public void Draw(SpriteBatch spriteBatch)
     {
