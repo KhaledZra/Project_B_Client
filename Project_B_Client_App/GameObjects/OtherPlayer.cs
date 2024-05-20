@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
@@ -16,8 +17,8 @@ public class OtherPlayer : GameObject, IDrawableObject
     private readonly AnimationController _anims;
     
     // Movement
-    private Vector2 _direction;
-    public Vector2 SetDirection(Vector2 direction) => _direction = direction;
+    private List<Vector2> _directions;
+    public void AddDirectionStack(Vector2 direction) => _directions.Add(direction);
     
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
@@ -38,6 +39,7 @@ public class OtherPlayer : GameObject, IDrawableObject
         _moveSpeed = moveSpeed;
         
         // Setup player animations
+        _directions = new();
         _anims = new AnimationController();
         _anims.AddAnimation(Vector2.UnitY, new Animation(_texture, 4, 4, 0.1f, 1)); // Down
         _anims.AddAnimation(-Vector2.UnitX, new Animation(_texture, 4, 4, 0.1f, 2)); // Left
@@ -50,15 +52,16 @@ public class OtherPlayer : GameObject, IDrawableObject
     
     public void Update(GameTime gameTime)
     {
-        if (_direction != Vector2.Zero)
+        if (_directions.Count > 0)
         {
-            _position += Vector2.Normalize(_direction) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _position += Vector2.Normalize(_directions[0]) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _anims.Update(_directions[0], gameTime);
+            _directions.RemoveAt(0);
         }
-        
-        _anims.Update(_direction, gameTime);
-        
-        // Reset
-        _direction = Vector2.Zero;
+        else
+        {
+            _anims.Update(Vector2.Zero, gameTime);
+        }
     }
     
     public void Draw(SpriteBatch spriteBatch)

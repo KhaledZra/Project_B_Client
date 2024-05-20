@@ -59,7 +59,7 @@ public class ServerHubHandler
                     if (player is not null)
                     {
                         Console.WriteLine("Received position: " + payload.User + " " + payload.Direction);
-                        player.SetDirection(payload.Direction);
+                        player.AddDirectionStack(payload.Direction);
                     }
                 }
             }
