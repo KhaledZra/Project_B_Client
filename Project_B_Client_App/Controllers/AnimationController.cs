@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +33,7 @@ public class AnimationController
 
     public void Draw(Vector2 position, SpriteBatch spriteBatch)
     {
+        Console.WriteLine($"Adding animation for {_lastKey}");
         _anims[_lastKey].Draw(position, spriteBatch);
     }
 }

@@ -44,9 +44,10 @@ public class ServerHubConnectionService
         await _hubConnection.InvokeAsync("SendMessage", user, message);
     }
     
-    public async Task SendPlayerInfo(string user, Vector2 playerPosition, float rotationRadians)
+    public async Task SendPlayerInfo(string user, Vector2 playerPosition, float rotationRadians, Vector2 direction)
     {
-        await _hubConnection.InvokeAsync("SendPosition", user, playerPosition.X, playerPosition.Y, rotationRadians);
+        await _hubConnection.InvokeAsync("SendPosition",
+            user, playerPosition.X, playerPosition.Y, rotationRadians, direction.X, direction.Y);
     }
 
     public void ListenToGetOtherConnectedClients(Action<List<string>> handler)
@@ -56,8 +57,8 @@ public class ServerHubConnectionService
 
     public void ListenToReceivePosition(Action<ReceivePositionPayload> handler)
     {
-        _hubConnection.On("ReceivePosition", (string user, float x, float y, float rotationRadians) =>
-            handler(new ReceivePositionPayload(user, x, y, rotationRadians)));
+        _hubConnection.On("ReceivePosition", (string user, float x, float y, float rotationRadians, float directionX, float directionY) =>
+            handler(new ReceivePositionPayload(user, x, y, rotationRadians, new Vector2(directionX, directionY))));
     }
     
     public void ListenToReceiveNewClientNotification(Action<string> handler)

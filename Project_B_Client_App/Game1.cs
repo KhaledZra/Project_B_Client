@@ -58,9 +58,9 @@ namespace Project_B_Client_App
             GameController.InitializeGameInputs(Exit);
             
             // Register Handlers
+            ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content, _middleOfScreen);
             ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content, _middleOfScreen);
             ServerHubHandler.UpdateOtherPlayersHandler();
-            ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content, _middleOfScreen);
             ServerHubHandler.RemoveDisconnectedOtherPlayerHandler();
             
             base.Initialize();
@@ -103,28 +103,24 @@ namespace Project_B_Client_App
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Globals.UpdateGt(gameTime);
             // TODO: Maybe group up the connection stuff to a separate method and call it here to reduce clutter and make a call order.
             // Will run one time and connect to the server, needs to be checked until it is connected.
             GameController.ConnectToServer();
+            _tiledMapRenderer.Update(gameTime);
             
             // Camera logic
             _camera.LookAt(PlayerController.GetPlayerPosition());
             
             // Animation logic
-            //PlayerController.DrawPlayer(_spriteBatch);
             InputController.Update();
             PlayerController.Update(gameTime);
-            //_testObject.Update(gameTime);
             
-            _tiledMapRenderer.Update(gameTime);
             
             // If connected to the server, checks the player info sent to the server to see if they are done.
             // This also only runs if the player is connected to the server.
             GameController.CheckServerPlayerInfoCalls();
-            
-            GameController.Update(gameTime);
-            
-            // InputController.OnInputAction(Keyboard.GetState().GetPressedKeys());
+            //GameController.OtherPlayers.ForEach(player => player.ForceUpdate(gameTime, Vector2.Zero));
 
             base.Update(gameTime);
         }

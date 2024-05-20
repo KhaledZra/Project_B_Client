@@ -10,15 +10,8 @@ namespace Project_B_Client_App.Handlers;
 public class ServerHubHandler
 {
     // TODO: in the future in the server side, the server will send the spawn point
-    // TODO: This is not working atm
     public static void SyncAlreadyConnectedPlayersHandler(ContentManager content, Vector2 spawnPoint)
     {
-        // // Player is synced with the server regarding the other players
-        // if (!_isOtherPlayerSyncNeeded) return;
-        //
-        // // Set to false as the handler is now registered
-        // _isOtherPlayerSyncNeeded = false;
-        
         GameController.ServerHubConnectionService.ListenToGetOtherConnectedClients(
             payload =>
             {
@@ -32,10 +25,10 @@ public class ServerHubHandler
                     if (!client.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
                         Player player = new Player(
-                            content.Load<Texture2D>("Sprites/player_sprite"),
+                            content.Load<Texture2D>("Animation/player1_spritesheet"),
                             spawnPoint,
                             0f,
-                            "Sprites/player_sprite",
+                            "Animation/player1_spritesheet",
                             0f,
                             client,
                             content);
@@ -61,8 +54,10 @@ public class ServerHubHandler
                         p.GetPlayerName.Equals(payload.User, StringComparison.OrdinalIgnoreCase));
                     if (player is not null)
                     {
+                        Console.WriteLine("Received position: " + payload.User + " " + payload.Direction);
                         player.SetPosition2D(new Vector2(payload.X, payload.Y));
                         player.SetRotation(payload.RotationRadians);
+                        // player.ForceUpdate(Globals.GameTime, payload.Direction);
                     }
                 }
             }
@@ -83,10 +78,11 @@ public class ServerHubHandler
                 Log.Information("New player connected: " + payload);
 
                 // Create a new player
-                Player player = new Player(content.Load<Texture2D>("Sprites/player_sprite"),
-                    new Vector2(spawnPoint.X, spawnPoint.Y), 0f, "Sprites/player_sprite",
+                Player player = new Player(content.Load<Texture2D>("Animation/player1_spritesheet"),
+                    new Vector2(spawnPoint.X, spawnPoint.Y), 0f, "Animation/player1_spritesheet",
                     0f, payload, content);
                 GameController.OtherPlayers.Add(player);
+                Log.Information($"Player added to the list! {GameController.OtherPlayers.Count}");
             }
         });
     }

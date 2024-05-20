@@ -2,7 +2,6 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Sprites;
 using Project_B_Client_App.Interface;
 
 namespace Project_B_Client_App.Controllers;
@@ -16,13 +15,13 @@ public class Player : GameObject, IDrawableObject
     private readonly float _moveSpeed;
     private readonly string _playerName;
     private readonly float _layerDepth;
+    private readonly AnimationController _anims;
     
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
     public Vector2 GetPlayerPosition => _position;
     public float GetRotation => _rotation;
 
-    private readonly AnimationController _anims = new();
     
     // create constructor
     public Player(
@@ -45,7 +44,7 @@ public class Player : GameObject, IDrawableObject
         _anims.AddAnimation(-Vector2.UnitY, new Animation(_texture, 4, 4, 0.1f, 4));// Up
     }
     
-    // This needs to be reworked to work with Move() below
+    // TODO: This needs to be reworked to work with Move() below
     public void SetPosition2D(Vector2 position) => _position = position;
     public void SetRotation(float rotationRadians) => _rotation = rotationRadians;
     
@@ -54,13 +53,24 @@ public class Player : GameObject, IDrawableObject
         _position += direction * (_moveSpeed * deltaTime);
         _rotation = TranslateDirectionToRotation(direction);
     }
+    
+    // This is used when we wanna force an update for the other players
+    public void ForceUpdate(GameTime gameTime, Vector2 direction)
+    {
+        if (direction != Vector2.Zero)
+        {
+            _position += Vector2.Normalize(direction) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        
+        _anims.Update(direction, gameTime);
+    }
 
     public void Update(GameTime gameTime)
     {
         if (InputController.Moving)
         {
             _position += Vector2.Normalize(InputController.Direction) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            GameController.SendPlayerInfoToServer();
+            GameController.SendPlayerInfoToServer(InputController.Direction);
         }
         
         _anims.Update(InputController.Direction, gameTime);
@@ -68,23 +78,8 @@ public class Player : GameObject, IDrawableObject
     
     public void Draw(SpriteBatch spriteBatch)
     {
-        // spriteBatch.Draw(
-        //     texture2D,
-        //     position2D,
-        //     null,
-        //     Color.White,
-        //     rotation,
-        //     new Vector2(texture2D.Width / 2, texture2D.Height / 2),
-        //     Vector2.One / 7f,
-        //     SpriteEffects.None,
-        //     layerDepth);
         _anims.Draw(_position, spriteBatch);
     }
-
-    // public void AnimationDraw(SpriteBatch spriteBatch, AnimatedSprite sprite)
-    // {
-    //     spriteBatch.Draw(sprite, position2D);
-    // }
     
     private float TranslateDirectionToRotation(Vector2 direction)
     {

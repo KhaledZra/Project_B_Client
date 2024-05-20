@@ -12,8 +12,6 @@ namespace Project_B_Client_App.Controllers;
 // The controller for the game, mostly to reduce clutter in the main class and to keep the game logic separate
 public static class GameController
 {
-    public static GameTime GameTime { get; private set; }
-
     // Todo: refactor this later.
     public static readonly ServerHubConnectionService ServerHubConnectionService = new();
     private static Task _serverCall = ServerHubConnectionService.StartConnection();
@@ -22,12 +20,6 @@ public static class GameController
 
     // Todo: maybe move this to it's own class
     public static List<Player> OtherPlayers { get; set; } = new();
-
-
-    public static void Update(GameTime gameTime)
-    {
-        GameTime = gameTime;
-    }
 
     public static void InitializeGameInputs(Action exitGame)
     {
@@ -60,14 +52,15 @@ public static class GameController
     }
 
     // Updates the server with player info
-    public static void SendPlayerInfoToServer()
+    public static void SendPlayerInfoToServer(Vector2 direction)
     {
         if (_isConnected)
         {
             _serverPlayerInfoCalls.Add(ServerHubConnectionService.SendPlayerInfo(
                 PlayerController.GetPlayerName(),
                 PlayerController.GetPlayerPosition(),
-                PlayerController.GetPlayerRotation()));
+                PlayerController.GetPlayerRotation(),
+                direction));
         }
     }
 
