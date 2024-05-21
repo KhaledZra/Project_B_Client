@@ -5,7 +5,9 @@ using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.ViewportAdapters;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Handlers;
+using Serilog;
 
 namespace Project_B_Client_App
 {
@@ -17,6 +19,7 @@ namespace Project_B_Client_App
         private OrthographicCamera _camera;
         private TiledMap _tiledMap;
         private TiledMapRenderer _tiledMapRenderer;
+        private Map _map;
 
         //private TestObject _testObject;
 
@@ -47,7 +50,7 @@ namespace Project_B_Client_App
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content, 
-                new Vector2(16, 13),
+                new Vector2(425, 875),
                 "Sprites/player_sprite");
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
@@ -76,6 +79,8 @@ namespace Project_B_Client_App
             // TODO: use this.Content to load your game content here
             _tiledMap = Content.Load<TiledMap>("Map/samplemap");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
+            
+            _map = new Map(_tiledMap.Width, _tiledMap.Height, new Point(_tiledMap.TileWidth, _tiledMap.TileHeight));
             
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
@@ -106,12 +111,23 @@ namespace Project_B_Client_App
             GameController.ConnectToServer();
             _tiledMapRenderer.Update(gameTime);
             
-            // Camera logic
+            // // Camera logic
+            // TODO: Camera logic for clamping is not working as intended. Need to fix this.
+            // var cameraPosition = PlayerController.GetPlayerPosition() - new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+            // var minCameraPosition = Vector2.Zero;
+            // var maxCameraPosition = new Vector2(_tiledMap.WidthInPixels - _graphics.PreferredBackBufferWidth, _tiledMap.HeightInPixels - _graphics.PreferredBackBufferHeight);
+            //
+            // // Clamp the camera position to the map bounds
+            // cameraPosition = Vector2.Clamp(cameraPosition, minCameraPosition, maxCameraPosition);
+            
             _camera.LookAt(PlayerController.GetPlayerPosition());
             
             // Animation logic
             InputController.Update();
             PlayerController.Update(gameTime, _tiledMap.WidthInPixels, _tiledMap.HeightInPixels);
+            
+            // Todo: remove this after
+            Log.Information("{0}", _map.GetTileFromPosition(PlayerController.GetPlayerPosition()).GetBound());
             
             
             // If connected to the server, checks the player info sent to the server to see if they are done.
@@ -132,7 +148,7 @@ namespace Project_B_Client_App
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             // Draw all game objects
-            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
+            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix(), samplerState: SamplerState.PointClamp);
             _tiledMapRenderer.Draw(_camera.GetViewMatrix());
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
