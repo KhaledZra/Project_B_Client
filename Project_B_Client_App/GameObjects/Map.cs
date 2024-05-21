@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Enums;
 using Serilog;
 
@@ -30,6 +31,10 @@ public class Map
                 _tileMap[x, y] = new Tile(tile, TileType.Walkable);
             }
         }
+        
+        // todo: Set some tiles to blocked
+        // todo: maybe a click feature? to get which tiles to set to blocked?
+        _tileMap[14, 30].SetTileType(TileType.Blocked);
     }
     
     public bool CanMoveTo(Vector2 position)
@@ -49,5 +54,13 @@ public class Map
         int y = (int)position.Y / _tileSize.Y;
         
         return _tileMap[x, y];
+    }
+    
+    public void Draw(SpriteBatch spriteBatch, Texture2D pixel)
+    {
+        foreach (Tile tile in _tileMap)
+        {
+            tile.Draw(spriteBatch, pixel);
+        }
     }
 }

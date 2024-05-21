@@ -20,6 +20,9 @@ namespace Project_B_Client_App
         private TiledMap _tiledMap;
         private TiledMapRenderer _tiledMapRenderer;
         private Map _map;
+        
+        // Helps draw lines
+        private Texture2D _pixel;
 
         //private TestObject _testObject;
 
@@ -81,6 +84,8 @@ namespace Project_B_Client_App
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
             
             _map = new Map(_tiledMap.Width, _tiledMap.Height, new Point(_tiledMap.TileWidth, _tiledMap.TileHeight));
+            _pixel = new Texture2D(GraphicsDevice, 1, 1);
+            _pixel.SetData([Color.White]); // Fill the texture with white color
             
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
@@ -96,6 +101,8 @@ namespace Project_B_Client_App
         {
             // TODO: Unload any non ContentManager content here
             this.Content.Unload();
+            
+            _spriteBatch.Dispose();
         }
 
         /// <summary>
@@ -153,6 +160,8 @@ namespace Project_B_Client_App
             GameObjectController.DrawGameObjects(_spriteBatch);
             PlayerController.DrawPlayer(_spriteBatch);
             GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch));
+            // TODO: this is a debug feature. Turn it off later :)
+            _map.Draw(_spriteBatch, _pixel);
             //_testObject.Draw(_spriteBatch);
             _spriteBatch.End();
             
