@@ -111,7 +111,7 @@ namespace Project_B_Client_App
             
             // Animation logic
             InputController.Update();
-            PlayerController.Update(gameTime);
+            PlayerController.Update(gameTime, _tiledMap.WidthInPixels, _tiledMap.HeightInPixels);
             
             
             // If connected to the server, checks the player info sent to the server to see if they are done.

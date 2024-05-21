@@ -31,8 +31,8 @@ public static class PlayerController
         _player.Draw(spriteBatch);
     }
 
-    public static void Update(GameTime gameTime)
+    public static void Update(GameTime gameTime, int mapWidth, int mapHeight)
     { 
-        _player.Update(gameTime);
+        _player.Update(gameTime, mapWidth, mapHeight);
     }
 }
