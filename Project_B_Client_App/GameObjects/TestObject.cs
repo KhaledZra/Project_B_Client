@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
 
-namespace Project_B_Client_App.Controllers;
+namespace Project_B_Client_App.GameObjects;
 
 public class TestObject
 {

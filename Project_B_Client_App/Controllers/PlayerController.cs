@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Project_B_Client_App.GameObjects;
 
 namespace Project_B_Client_App.Controllers;
 

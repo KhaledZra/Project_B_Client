@@ -47,7 +47,7 @@ namespace Project_B_Client_App
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content, 
-                _middleOfScreen,
+                new Vector2(16, 13),
                 "Sprites/player_sprite");
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);

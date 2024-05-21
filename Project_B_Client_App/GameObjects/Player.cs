@@ -2,9 +2,10 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Project_B_Client_App.Controllers;
 using Project_B_Client_App.Interface;
 
-namespace Project_B_Client_App.Controllers;
+namespace Project_B_Client_App.GameObjects;
 
 // The player object
 public class Player : GameObject, IDrawableObject
@@ -50,6 +51,7 @@ public class Player : GameObject, IDrawableObject
         {
             _position += Vector2.Normalize(InputController.Direction) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             GameController.SendPlayerInfoToServer(InputController.Direction);
+            Console.WriteLine($"Player position: {_position}");
         }
         
         _anims.Update(InputController.Direction, gameTime);

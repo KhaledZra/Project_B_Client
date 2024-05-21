@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project_B_Client_App.Controllers;
+namespace Project_B_Client_App.GameObjects;
 
 public class Animation
 {
@@ -60,6 +60,6 @@ public class Animation
 
     public void Draw(Vector2 pos, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(_texture, pos, _sourceRectangles[_frame], Color.White, 0, Vector2.Zero, Vector2.One / 2f, SpriteEffects.None, 1);
+        spriteBatch.Draw(_texture, pos, _sourceRectangles[_frame], Color.White, 0, new Vector2(_sourceRectangles[_frame].Width / 2.0f, _sourceRectangles[_frame].Height / 2.0f), Vector2.One / 2, SpriteEffects.None, 1);
     }
 }
