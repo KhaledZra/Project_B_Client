@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
 using Project_B_Client_App.Interface;
+using Project_B_Client_App.Models;
 
 namespace Project_B_Client_App.GameObjects;
 
@@ -15,10 +16,11 @@ public class OtherPlayer : GameObject, IDrawableObject
     private readonly string _playerName;
     private readonly float _layerDepth;
     private readonly AnimationController _anims;
+    private readonly string _assetName;
     
     // Movement
-    private List<Vector2> _directions;
-    public void AddDirectionStack(Vector2 direction) => _directions.Add(direction);
+    private List<MovementQue> _directions;
+    public void AddDirectionStack(MovementQue que) => _directions.Add(que);
     
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
@@ -37,6 +39,7 @@ public class OtherPlayer : GameObject, IDrawableObject
         _playerName = playerName;
         _layerDepth = layerDepth;
         _moveSpeed = moveSpeed;
+        _assetName = assetName;
         
         // Setup player animations
         _directions = new();
@@ -52,10 +55,12 @@ public class OtherPlayer : GameObject, IDrawableObject
     
     public void Update(GameTime gameTime)
     {
+        // TODO: Fix the desync. Currently very bad on server side
+        
         if (_directions.Count > 0)
         {
-            _position += Vector2.Normalize(_directions[0]) * _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _anims.Update(_directions[0], gameTime);
+            _position = _directions[0].GetPosition;
+            _anims.Update(_directions[0].GetDirection, gameTime);
             _directions.RemoveAt(0);
         }
         else

@@ -77,7 +77,6 @@ public class Player : GameObject, IDrawableObject
                 {
                     _position = newPosition;
                     GameController.SendPlayerInfoToServer(InputController.Direction);
-                    Console.WriteLine($"Player position: {_position}");
                 }
             }
         }

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
 using Project_B_Client_App.GameObjects;
+using Project_B_Client_App.Models;
 using Project_B_Client_App.Payloads;
 using Serilog;
 
@@ -29,11 +30,12 @@ public class ServerHubHandler
                     // Incase the client is the current player
                     if (!client.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
+                        Log.Information(client.ClientPlayerSprite);
                         OtherPlayer otherPlayer = new OtherPlayer(
-                            content.Load<Texture2D>(client.ClientPlayerSpriteName),
+                            content.Load<Texture2D>(client.ClientPlayerSprite),
                             new Vector2(client.PositionX, client.PositionY),
                             0f,
-                            client.ClientPlayerSpriteName,
+                            client.ClientPlayerSprite,
                             0f,
                             client.ClientName);
 
@@ -59,7 +61,7 @@ public class ServerHubHandler
                     if (player is not null)
                     {
                         Console.WriteLine("Received position: " + payload.User + " " + payload.Direction);
-                        player.AddDirectionStack(payload.Direction);
+                        player.AddDirectionStack(new MovementQue(payload.Direction, new Vector2(payload.X, payload.Y)));
                     }
                 }
             }
@@ -76,10 +78,10 @@ public class ServerHubHandler
 
             // Create a new player
             OtherPlayer player = new OtherPlayer(
-                content.Load<Texture2D>("Animation/player1_spritesheet"),
+                content.Load<Texture2D>(payload.ClientPlayerSprite),
                 new Vector2(payload.PositionX, payload.PositionY),
                 0f,
-                "Animation/player1_spritesheet",
+                payload.ClientPlayerSprite,
                 0f,
                 payload.ClientName);
 
