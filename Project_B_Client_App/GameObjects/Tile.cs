@@ -24,6 +24,16 @@ public class Tile
     {
         _type = type;
     }
+    
+    public TileType GetTileType()
+    {
+        return _type;
+    }
+
+    public Point GetTilePosition()
+    {
+        return new Point(_bound.X / _bound.Width, _bound.Y / _bound.Height);
+    }
 
     public bool CanMoveTo(int x, int y)
     {

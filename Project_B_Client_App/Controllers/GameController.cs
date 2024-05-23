@@ -22,19 +22,6 @@ public static class GameController
     // Todo: maybe move this to it's own class
     public static List<OtherPlayer> OtherPlayers { get; set; } = new();
 
-    public static void InitializeGameInputs(Action exitGame)
-    {
-        // Initialize the game inputs
-        // Movement
-        // InputController.AddInputAction(Keys.W, [PlayerController.MovePlayerForward, SendPlayerInfoToServer]);
-        // InputController.AddInputAction(Keys.S, [PlayerController.MovePlayerBackward, SendPlayerInfoToServer]);
-        // InputController.AddInputAction(Keys.D, [PlayerController.MovePlayerRight, SendPlayerInfoToServer]);
-        // InputController.AddInputAction(Keys.A, [PlayerController.MovePlayerLeft, SendPlayerInfoToServer]);
-        //
-        // // Exit
-        // InputController.AddInputAction(Keys.Escape, [exitGame]);
-    }
-
     public static void ConnectToServer()
     {
         if (_serverCall is not null && ServerHubConnectionService.GetState() != "Connecting")

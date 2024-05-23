@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Xna.Framework;
@@ -11,8 +10,8 @@ namespace Project_B_Client_App.Services;
 public class ServerHubConnectionService
 {
     private readonly HubConnection _hubConnection;
-    // private const string Url = "https://project-b-server-081b429cac7e.herokuapp.com/chathub";
-    private const string Url = "http://localhost:5013/chathub";
+    // private const string Url = "https://project-b-server-081b429cac7e.herokuapp.com/serverhub";
+    private const string Url = "http://localhost:5013/serverhub";
     
     public ServerHubConnectionService()
     {

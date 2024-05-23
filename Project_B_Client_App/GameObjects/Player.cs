@@ -29,7 +29,7 @@ public class Player : GameObject, IDrawableObject
     public Player(
         Texture2D texture2D, Vector2 position2D, float rotation, string assetName, float layerDepth, string playerName,
         ContentManager contentManager,
-        float moveSpeed = 75f) :
+        float moveSpeed = 75.0f) :
         base(texture2D, position2D, rotation, assetName, layerDepth)
     {
         _texture = contentManager.Load<Texture2D>("Animation/player1_spritesheet");
@@ -47,7 +47,7 @@ public class Player : GameObject, IDrawableObject
         _anims.AddAnimation(-Vector2.UnitY, new Animation(_texture, 4, 4, 0.1f, 4)); // Up
     }
 
-    public void Update(GameTime gameTime, int mapWidth, int mapHeight)
+    public void Update(GameTime gameTime, int mapWidth, int mapHeight, Predicate<Vector2> canMoveAction)
     {
         if (InputController.Moving)
         {
@@ -67,10 +67,15 @@ public class Player : GameObject, IDrawableObject
 
             if (canMove)
             {
-                _position += Vector2.Normalize(InputController.Direction) * 70.0f *
-                             (float)gameTime.ElapsedGameTime.TotalSeconds;
-                GameController.SendPlayerInfoToServer(InputController.Direction);
-                Console.WriteLine($"Player position: {_position}");
+                var newPosition = _position + Vector2.Normalize(InputController.Direction) * _moveSpeed *
+                    (float)gameTime.ElapsedGameTime.TotalSeconds;
+                
+                if (canMoveAction(newPosition))
+                {
+                    _position = newPosition;
+                    GameController.SendPlayerInfoToServer(InputController.Direction);
+                    Console.WriteLine($"Player position: {_position}");
+                }
             }
         }
 

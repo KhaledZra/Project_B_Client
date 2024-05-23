@@ -1,10 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.ViewportAdapters;
 using Project_B_Client_App.Controllers;
+using Project_B_Client_App.Enums;
 using Project_B_Client_App.GameObjects;
 using Project_B_Client_App.Handlers;
 using Serilog;
@@ -20,6 +25,10 @@ namespace Project_B_Client_App
         private TiledMap _tiledMap;
         private TiledMapRenderer _tiledMapRenderer;
         private Map _map;
+        
+        // todo: debug feature
+        private bool _mouseReleased = true;
+        private List<string> _tileCode = new List<string>();
         
         // Helps draw lines
         private Texture2D _pixel;
@@ -58,8 +67,6 @@ namespace Project_B_Client_App
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
             
-            GameController.InitializeGameInputs(Exit);
-            
             // Register Handlers
             ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content);
             ServerHubHandler.AddNewConnectedOtherPlayerHandler(this.Content);
@@ -80,7 +87,7 @@ namespace Project_B_Client_App
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            _tiledMap = Content.Load<TiledMap>("Map/samplemap");
+            _tiledMap = Content.Load<TiledMap>("Map/samplemap_2");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
             
             _map = new Map(_tiledMap.Width, _tiledMap.Height, new Point(_tiledMap.TileWidth, _tiledMap.TileHeight));
@@ -112,6 +119,8 @@ namespace Project_B_Client_App
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            
             Globals.UpdateGt(gameTime);
             // TODO: Maybe group up the connection stuff to a separate method and call it here to reduce clutter and make a call order.
             // Will run one time and connect to the server, needs to be checked until it is connected.
@@ -131,10 +140,10 @@ namespace Project_B_Client_App
             
             // Animation logic
             InputController.Update();
-            PlayerController.Update(gameTime, _tiledMap.WidthInPixels, _tiledMap.HeightInPixels);
+            PlayerController.Update(gameTime, _tiledMap.WidthInPixels, _tiledMap.HeightInPixels, _map.CanMoveTo);
             
             // Todo: remove this after
-            Log.Information("{0}", _map.GetTileFromPosition(PlayerController.GetPlayerPosition()).GetBound());
+            // Log.Information("{0}", _map.GetTileFromPosition(PlayerController.GetPlayerPosition()).GetBound());
             
             
             // If connected to the server, checks the player info sent to the server to see if they are done.
@@ -166,6 +175,46 @@ namespace Project_B_Client_App
             _spriteBatch.End();
             
             base.Draw(gameTime);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Log.Information("Exiting game...");
+            // todo remove later
+            // File.WriteAllLines("tiles.txt", _tileCode.ToArray());
+            // Log.Information("Saving tiles to textfile");
+            base.OnExiting(sender, args);
+        }
+
+
+        // Debug feature
+        private void SetTilesWithMouse()
+        {
+            var mouse = Mouse.GetState();
+            Vector2 mousePosition = mouse.Position.ToVector2();
+            Vector2 worldPosition = _camera.ScreenToWorld(mousePosition);
+            
+            if (mouse.LeftButton == ButtonState.Pressed && _mouseReleased)
+            {
+                _mouseReleased = false;
+                var tilePoint = _map.GetTileFromPosition(worldPosition).GetTilePosition();
+                if (_map.GetTileFromPosition(worldPosition).GetTileType() == TileType.Blocked)
+                {
+                    _map.GetTileFromPosition(worldPosition).SetTileType(TileType.Walkable);
+                    _tileCode.Add($"_tileMap[{tilePoint.X}, {tilePoint.Y}].SetTileType(TileType.Walkable);");
+                    Log.Information("Tile set to walkable at {0}", tilePoint);
+                }
+                else
+                {
+                    _map.GetTileFromPosition(worldPosition).SetTileType(TileType.Blocked);
+                    _tileCode.Remove($"_tileMap[{tilePoint.X}, {tilePoint.Y}].SetTileType(TileType.Walkable);");
+                }
+            }
+            else if (_mouseReleased == false && mouse.LeftButton == ButtonState.Released)
+            {
+                _mouseReleased = true;
+                
+            }
         }
     }
 }
