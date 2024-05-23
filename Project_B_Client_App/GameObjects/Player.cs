@@ -17,12 +17,14 @@ public class Player : GameObject, IDrawableObject
     private readonly float _moveSpeed;
     private readonly string _playerName;
     private readonly float _layerDepth;
+    private readonly string _assetName;
     private readonly AnimationController _anims;
 
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
     public Vector2 GetPlayerPosition => _position;
     public float GetRotation => _rotation;
+    public string GetPlayerSpriteName => _assetName;
 
 
     // create constructor
@@ -32,12 +34,13 @@ public class Player : GameObject, IDrawableObject
         float moveSpeed = 75.0f) :
         base(texture2D, position2D, rotation, assetName, layerDepth)
     {
-        _texture = contentManager.Load<Texture2D>("Animation/player1_spritesheet");
+        _texture = texture2D;
         _position = position2D;
         _rotation = rotation;
         _playerName = playerName;
         _layerDepth = layerDepth;
         _moveSpeed = moveSpeed;
+        _assetName = assetName;
 
         // Setup player animations
         _anims = new AnimationController();

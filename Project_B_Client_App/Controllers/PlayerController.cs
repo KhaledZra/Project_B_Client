@@ -23,6 +23,7 @@ public static class PlayerController
     }
 
     public static string GetPlayerName() => _player.GetPlayerName;
+    public static string GetPlayerSpriteName() => _player.GetPlayerSpriteName;
     public static Vector2 GetPlayerPosition() => _player.GetPlayerPosition;
     public static float GetPlayerRotation() => _player.GetRotation;
 

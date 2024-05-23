@@ -30,10 +30,10 @@ public class ServerHubHandler
                     if (!client.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
                         OtherPlayer otherPlayer = new OtherPlayer(
-                            content.Load<Texture2D>("Animation/player1_spritesheet"),
+                            content.Load<Texture2D>(client.ClientPlayerSpriteName),
                             new Vector2(client.PositionX, client.PositionY),
                             0f,
-                            "Animation/player1_spritesheet",
+                            client.ClientPlayerSpriteName,
                             0f,
                             client.ClientName);
 

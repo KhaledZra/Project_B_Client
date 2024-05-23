@@ -64,7 +64,7 @@ namespace Project_B_Client_App
             PlayerController.InitializePlayer(
                 this.Content,
                 new Vector2(425, 875),
-                "Sprites/player_sprite");
+                "Animation/player1_spritesheet");
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
 
