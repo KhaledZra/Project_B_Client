@@ -54,7 +54,7 @@ public class OtherPlayer : GameObject, IDrawableObject
     {
         if (_directions.Count > 0)
         {
-            _position += Vector2.Normalize(_directions[0]) * 70.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _position += Vector2.Normalize(_directions[0]) * _moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             _anims.Update(_directions[0], gameTime);
             _directions.RemoveAt(0);
         }
