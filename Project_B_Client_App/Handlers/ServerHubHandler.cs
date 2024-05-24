@@ -60,7 +60,6 @@ public static class ServerHubHandler
                         p.GetPlayerName.Equals(payload.User, StringComparison.OrdinalIgnoreCase));
                     if (player is not null)
                     {
-                        Console.WriteLine("Received position: " + payload.User + " " + payload.Direction);
                         player.AddDirectionStack(new MovementQue(payload.Direction, new Vector2(payload.X, payload.Y)));
                     }
                 }
