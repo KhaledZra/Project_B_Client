@@ -12,32 +12,32 @@ using Serilog;
 
 namespace Project_B_Client_App.Handlers;
 
-public class ServerHubHandler
+public static class ServerHubHandler
 {
     public static void SyncAlreadyConnectedPlayersHandler(ContentManager content)
     {
         GameController.ServerHubConnectionService.ListenToGetOtherConnectedClients(
             payload =>
             {
-                Log.Information("Received clients info: " + payload);
+                Log.Information("Received clients info: {Payload}", payload);
                 List<ClientPayload> clientPayloads = JsonSerializer.Deserialize<List<ClientPayload>>(payload);
                 // Clear this as we are going to refill it with the current active players
                 GameController.OtherPlayers.Clear();
-                Log.Information("clients.Count: " + clientPayloads.Count);
+                Log.Information("clients.Count: {Count}", clientPayloads.Count);
 
                 clientPayloads.ForEach(client =>
                 {
                     // Incase the client is the current player
                     if (!client.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase))
                     {
-                        Log.Information(client.ClientPlayerSprite);
                         OtherPlayer otherPlayer = new OtherPlayer(
                             content.Load<Texture2D>(client.ClientPlayerSprite),
                             new Vector2(client.PositionX, client.PositionY),
                             0f,
                             client.ClientPlayerSprite,
                             0f,
-                            client.ClientName);
+                            client.ClientName,
+                            client.ClientNickName);
 
                         GameController.OtherPlayers.Add(otherPlayer);
                     }
@@ -74,7 +74,7 @@ public class ServerHubHandler
         {
             // Ignore if it's about the client player or the payload is already processed
             if (payload.ClientName.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
-            Log.Information("New player connected: " + payload);
+            Log.Information("New player connected: {Payload}", payload);
 
             // Create a new player
             OtherPlayer player = new OtherPlayer(
@@ -83,10 +83,11 @@ public class ServerHubHandler
                 0f,
                 payload.ClientPlayerSprite,
                 0f,
-                payload.ClientName);
+                payload.ClientName,
+                payload.ClientNickName);
 
             GameController.OtherPlayers.Add(player);
-            Log.Information($"Player added to the list! {GameController.OtherPlayers.Count}");
+            Log.Information("Player added to the list! {OtherPlayersCount}", GameController.OtherPlayers.Count);
         });
     }
 
@@ -98,7 +99,7 @@ public class ServerHubHandler
             {
                 // Ignore if it's about the client player, should not really happen but just in case.
                 if (payload.Equals(PlayerController.GetPlayerName(), StringComparison.OrdinalIgnoreCase)) return;
-                Log.Information("Player disconnected: " + payload);
+                Log.Information("Player disconnected: {Payload}", payload);
 
                 // Find the player
                 OtherPlayer player = GameController.OtherPlayers.Find(p =>
