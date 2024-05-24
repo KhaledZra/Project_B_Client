@@ -16,11 +16,11 @@ Log.Logger = log;
 // Forcing user to go through launcher
 if(args.Length == 0)
 {
-    Log.Error("Please use the launcher to start the game");
+    Log.Information("Please use the launcher to start the game");
     try
     {
-        Process.Start("Launcher/Project_B_Launcher.exe");
-        return;
+        var launcher = Process.Start("Launcher/Project_b_launcher.exe");
+        launcher.WaitForExit();
     }
     catch (Exception e)
     {
@@ -32,7 +32,7 @@ if(args.Length == 0)
 // Loading config
 try
 {
-    string jsonString = File.ReadAllText("Launcher/config.json");
+    string jsonString = File.ReadAllText("Config.json");
     Globals.Config = JsonSerializer.Deserialize<Config>(jsonString);
     Log.Information("Config loaded successfully");
 }
