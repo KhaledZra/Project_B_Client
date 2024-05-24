@@ -35,7 +35,8 @@ public static class PlayerController
         
         // Calculate font position
         var fontPos = _player.GetPlayerPosition;
-        fontPos.Y -= 18;
+        // todo fix this logic
+        fontPos.Y -= font.MeasureString(_player.GetPlayerNickName).Y / 2.0f;
         fontPos.X -= 13;
         spriteBatch.DrawString(font, _player.GetPlayerNickName, fontPos, Color.White, 0f, Vector2.Zero, Vector2.One / 4.0f, SpriteEffects.None, 0f);
     }
