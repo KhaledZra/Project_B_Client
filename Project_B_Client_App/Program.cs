@@ -21,6 +21,8 @@ if(args.Length == 0)
     {
         var launcher = Process.Start("Launcher/Project_b_launcher.exe");
         launcher.WaitForExit();
+        Log.Information("Launcher closed code: {ExitCode}", launcher.ExitCode);
+        if (launcher.ExitCode != 200) return; // I'm using 200 as the success code for launching the game.
     }
     catch (Exception e)
     {

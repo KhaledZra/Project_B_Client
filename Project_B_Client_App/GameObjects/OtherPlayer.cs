@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
-using Project_B_Client_App.Interface;
 using Project_B_Client_App.Models;
 
 namespace Project_B_Client_App.GameObjects;
 
-public class OtherPlayer : GameObject, IDrawableObject
+public class OtherPlayer : GameObject
 {
     private Texture2D _texture;
     private Vector2 _position;
@@ -73,8 +72,14 @@ public class OtherPlayer : GameObject, IDrawableObject
         }
     }
     
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, SpriteFont spriteFont)
     {
         _anims.Draw(_position, spriteBatch);
+        
+        // Calculate font position
+        var fontPos = _position;
+        fontPos.Y -= 18;
+        fontPos.X -= 13;
+        spriteBatch.DrawString(spriteFont, _playerNickName, fontPos, Color.White, 0f, Vector2.Zero, Vector2.One / 4.0f, SpriteEffects.None, 0f);
     }
 }

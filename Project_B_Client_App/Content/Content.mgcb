@@ -20,7 +20,7 @@
 #begin Animation/motw.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
+/processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -32,7 +32,7 @@
 #begin Animation/player1_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
+/processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -41,44 +41,10 @@
 /processorParam:TextureFormat=Color
 /build:Animation/player1_spritesheet.png
 
-#begin Map/samplemap.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:Map/samplemap.tmx
-
-#begin Sprites/Floor/grass_tileset.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Floor/grass_tileset.png
-
-#begin Sprites/player_sprite.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/player_sprite.png
-
-#begin Map/samplemap_2.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:Map/samplemap_2.tmx
-
 #begin Animation/player2_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
+/processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -90,7 +56,7 @@
 #begin Animation/player3_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
+/processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -102,7 +68,7 @@
 #begin Animation/player4_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
-/processorParam:ColorKeyColor=255, 0, 255, 255
+/processorParam:ColorKeyColor=255,0,255,255
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
@@ -110,4 +76,45 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Animation/player4_spritesheet.png
+
+#begin Font/8bit.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font/8bit.spritefont
+
+#begin Map/samplemap_2.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Map/samplemap_2.tmx
+
+#begin Map/samplemap.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Map/samplemap.tmx
+
+#begin Sprites/Floor/grass_tileset.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Floor/grass_tileset.png
+
+#begin Sprites/player_sprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/player_sprite.png
 

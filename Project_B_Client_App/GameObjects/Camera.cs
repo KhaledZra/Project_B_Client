@@ -6,7 +6,7 @@ public class Camera
 {
     public Camera(int viewportWidth, int viewportHeight)
     {
-        Zoom = 1.0f;
+        Zoom = 2.5f;
         ViewportWidth = viewportWidth;
         ViewportHeight = viewportHeight;
     }

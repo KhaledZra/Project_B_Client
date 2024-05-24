@@ -29,9 +29,15 @@ public static class PlayerController
     public static Vector2 GetPlayerPosition() => _player.GetPlayerPosition;
     public static float GetPlayerRotation() => _player.GetRotation;
 
-    public static void DrawPlayer(SpriteBatch spriteBatch)
+    public static void DrawPlayer(SpriteBatch spriteBatch, SpriteFont font)
     {
         _player.Draw(spriteBatch);
+        
+        // Calculate font position
+        var fontPos = _player.GetPlayerPosition;
+        fontPos.Y -= 18;
+        fontPos.X -= 13;
+        spriteBatch.DrawString(font, _player.GetPlayerNickName, fontPos, Color.White, 0f, Vector2.Zero, Vector2.One / 4.0f, SpriteEffects.None, 0f);
     }
 
     public static void Update(GameTime gameTime, int mapWidth, int mapHeight, Predicate<Vector2> canMoveAction)

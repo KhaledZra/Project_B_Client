@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
-using MonoGame.Extended.ViewportAdapters;
 using Project_B_Client_App.Controllers;
 using Project_B_Client_App.Enums;
 using Project_B_Client_App.GameObjects;
@@ -25,6 +22,7 @@ namespace Project_B_Client_App
         private TiledMapRenderer _tiledMapRenderer;
         private Map _map;
         private Camera _camera;
+        private SpriteFont _spriteFont;
 
         // todo: debug feature
         private bool _mouseReleased = true;
@@ -94,6 +92,8 @@ namespace Project_B_Client_App
             _pixel.SetData([Color.White]); // Fill the texture with white color
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            _spriteFont = Content.Load<SpriteFont>("Font/8bit");
 
             // TODO: This might be redundant. Keep an eye on this
             GameObjectController.LoadGameObjectsTextures(this.Content);
@@ -166,10 +166,10 @@ namespace Project_B_Client_App
             _spriteBatch.Begin(transformMatrix: _camera.TranslationMatrix, samplerState: SamplerState.PointClamp);
             _tiledMapRenderer.Draw(_camera.TranslationMatrix);
             GameObjectController.DrawGameObjects(_spriteBatch);
-            PlayerController.DrawPlayer(_spriteBatch);
-            GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch));
+            PlayerController.DrawPlayer(_spriteBatch, _spriteFont);
+            GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch, _spriteFont));
             // TODO: this is a debug feature. Turn it off later :)
-            _map.Draw(_spriteBatch, _pixel);
+            //_map.Draw(_spriteBatch, _pixel);
             //_testObject.Draw(_spriteBatch);
             _spriteBatch.End();
 
