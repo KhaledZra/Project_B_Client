@@ -16,12 +16,14 @@ public class Player : GameObject, IDrawableObject
     private float _rotation;
     private readonly float _moveSpeed;
     private readonly string _playerName;
+    private readonly string _playerNickName;
     private readonly float _layerDepth;
     private readonly string _assetName;
     private readonly AnimationController _anims;
 
     public float GetSpeed => _moveSpeed;
     public string GetPlayerName => _playerName;
+    public string GetPlayerNickName => _playerNickName;
     public Vector2 GetPlayerPosition => _position;
     public float GetRotation => _rotation;
     public string GetPlayerSpriteName => _assetName;
@@ -31,6 +33,7 @@ public class Player : GameObject, IDrawableObject
     public Player(
         Texture2D texture2D, Vector2 position2D, float rotation, string assetName, float layerDepth, string playerName,
         ContentManager contentManager,
+        string playerNickName,
         float moveSpeed = 75.0f) :
         base(texture2D, position2D, rotation, assetName, layerDepth)
     {
@@ -41,6 +44,7 @@ public class Player : GameObject, IDrawableObject
         _layerDepth = layerDepth;
         _moveSpeed = moveSpeed;
         _assetName = assetName;
+        _playerNickName = playerNickName;
 
         // Setup player animations
         _anims = new AnimationController();

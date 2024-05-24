@@ -26,7 +26,11 @@ public class ServerHubConnectionService
         await _hubConnection.StartAsync();
         // Tell server this player has connected
         var playerPos = PlayerController.GetPlayerPosition();
-        await _hubConnection.InvokeAsync("SendClientInfo", PlayerController.GetPlayerName(), PlayerController.GetPlayerSpriteName(), playerPos.X, playerPos.Y);
+        await _hubConnection.InvokeAsync("SendClientInfo",
+            PlayerController.GetPlayerName(),
+            PlayerController.GetPlayerSpriteName(),
+            PlayerController.GetPlayerNickName(),
+            playerPos.X, playerPos.Y);
         await _hubConnection.InvokeAsync("SendClientsInfoToCaller");
     }
 
@@ -67,8 +71,8 @@ public class ServerHubConnectionService
     public void ListenToReceiveNewClientNotification(Action<ClientPayload> handler)
     {
         _hubConnection.On("ReceiveNewClientNotification",
-            (string user, string clientPlayerSpriteName, float positionX, float positionY) =>
-                handler(new ClientPayload(user, clientPlayerSpriteName, positionX, positionY)));
+            (string user, string clientPlayerSpriteName, string clientNickName, float positionX, float positionY) =>
+                handler(new ClientPayload(user, clientPlayerSpriteName, clientNickName, positionX, positionY)));
     }
 
     public void ListenToReceiveClientDisconnectedNotification(Action<string> handler)

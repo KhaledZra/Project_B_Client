@@ -63,8 +63,7 @@ namespace Project_B_Client_App
             // TODO: Clean up later how player is created
             PlayerController.InitializePlayer(
                 this.Content,
-                new Vector2(425, 875),
-                "Animation/player1_spritesheet");
+                new Vector2(425, 875));
 
             //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
 
@@ -170,7 +169,7 @@ namespace Project_B_Client_App
             PlayerController.DrawPlayer(_spriteBatch);
             GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch));
             // TODO: this is a debug feature. Turn it off later :)
-            //_map.Draw(_spriteBatch, _pixel);
+            _map.Draw(_spriteBatch, _pixel);
             //_testObject.Draw(_spriteBatch);
             _spriteBatch.End();
 

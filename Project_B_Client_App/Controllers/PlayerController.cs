@@ -10,19 +10,21 @@ public static class PlayerController
 {
     private static Player _player;
     
-    public static void InitializePlayer(ContentManager contentManager, Vector2 position2D, String assetName)
+    public static void InitializePlayer(ContentManager contentManager, Vector2 position2D)
     {
         _player = new(
-            contentManager.Load<Texture2D>(assetName),
+            contentManager.Load<Texture2D>(Globals.Config.PlayerAsset),
             position2D,
             0f,
-            assetName,
+            Globals.Config.PlayerAsset,
             0f,
             new Random(Guid.NewGuid().GetHashCode()).Next().ToString(),  // TODO: Change later to get the player name from the UI
-            contentManager);
+            contentManager,
+            Globals.Config.PlayerName);
     }
 
     public static string GetPlayerName() => _player.GetPlayerName;
+    public static string GetPlayerNickName() => _player.GetPlayerNickName;
     public static string GetPlayerSpriteName() => _player.GetPlayerSpriteName;
     public static Vector2 GetPlayerPosition() => _player.GetPlayerPosition;
     public static float GetPlayerRotation() => _player.GetRotation;
