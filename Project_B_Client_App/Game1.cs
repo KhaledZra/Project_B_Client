@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -43,8 +44,8 @@ namespace Project_B_Client_App
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _middleOfScreen = new Vector2(_graphics.PreferredBackBufferWidth / 2,
-                _graphics.PreferredBackBufferHeight / 2);
+            _middleOfScreen = new Vector2(_graphics.PreferredBackBufferWidth / 2.0f,
+                _graphics.PreferredBackBufferHeight / 2.0f);
         }
 
         /// <summary>
@@ -94,9 +95,6 @@ namespace Project_B_Client_App
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
             _spriteFont = Content.Load<SpriteFont>("Font/8bit");
-
-            // TODO: This might be redundant. Keep an eye on this
-            GameObjectController.LoadGameObjectsTextures(this.Content);
         }
 
         /// <summary>
@@ -150,6 +148,9 @@ namespace Project_B_Client_App
             GameController.CheckServerPlayerInfoCalls();
             GameController.OtherPlayers.ForEach(op => op.Update(gameTime));
 
+            // todo: remove debug feature
+            // SetTilesWithMouse();
+
             base.Update(gameTime);
         }
 
@@ -165,12 +166,12 @@ namespace Project_B_Client_App
             // Draw all game objects
             _spriteBatch.Begin(transformMatrix: _camera.TranslationMatrix, samplerState: SamplerState.PointClamp);
             _tiledMapRenderer.Draw(_camera.TranslationMatrix);
-            GameObjectController.DrawGameObjects(_spriteBatch);
-            PlayerController.DrawPlayer(_spriteBatch, _spriteFont);
             GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch, _spriteFont));
+            PlayerController.DrawPlayer(_spriteBatch, _spriteFont);
+            
             // TODO: this is a debug feature. Turn it off later :)
-            //_map.Draw(_spriteBatch, _pixel);
-            //_testObject.Draw(_spriteBatch);
+            // _map.Draw(_spriteBatch, _pixel);
+            
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -180,8 +181,8 @@ namespace Project_B_Client_App
         {
             Log.Information("Exiting game...");
             // todo remove later
-            // File.WriteAllLines("tiles.txt", _tileCode.ToArray());
-            // Log.Information("Saving tiles to textfile");
+            File.WriteAllLines("tiles.txt", _tileCode.ToArray());
+            Log.Information("Saving tiles to textfile");
             base.OnExiting(sender, args);
         }
 

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project_B_Client_App.Controllers;
+namespace Project_B_Client_App.GameObjects;
 
 // The base class of all GameObjects
 public abstract class GameObject(
