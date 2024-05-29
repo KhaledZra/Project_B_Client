@@ -26,13 +26,10 @@ namespace Project_B_Client_App
         private SpriteFont _spriteFont;
 
         // todo: debug feature
-        private bool _mouseReleased = true;
-        private List<string> _tileCode = new List<string>();
+        private DebugTools _debugTools;
 
         // Helps draw lines
         private Texture2D _pixel;
-
-        //private TestObject _testObject;
 
         public Game1()
         {
@@ -58,13 +55,10 @@ namespace Project_B_Client_App
         {
             // TODO: Add your initialization logic here
 
-            // Create player that spawns in the middle of the game window
-            // TODO: Clean up later how player is created
+            // Create player that spawns in a set spot on the map
             PlayerController.InitializePlayer(
                 this.Content,
                 new Vector2(425, 875));
-
-            //_testObject = new TestObject(PlayerController.GetPlayerPosition(), Content);
 
             // Register Handlers
             ServerHubHandler.SyncAlreadyConnectedPlayersHandler(this.Content);
@@ -76,6 +70,11 @@ namespace Project_B_Client_App
 
             // Camera setup
             _camera = new Camera(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+
+            if (Globals.IsDebugging)
+            {
+                _debugTools = new DebugTools();
+            }
         }
 
         /// <summary>
@@ -124,23 +123,12 @@ namespace Project_B_Client_App
             GameController.ConnectToServer();
             _tiledMapRenderer.Update(gameTime);
 
-            // // Camera logic
-            // TODO: Camera logic for clamping is not working as intended. Need to fix this.
-            // var cameraPosition = PlayerController.GetPlayerPosition() - new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
-            // var minCameraPosition = Vector2.Zero;
-            // var maxCameraPosition = new Vector2(_tiledMap.WidthInPixels - _graphics.PreferredBackBufferWidth, _tiledMap.HeightInPixels - _graphics.PreferredBackBufferHeight);
-            //
-            // // Clamp the camera position to the map bounds
-            // cameraPosition = Vector2.Clamp(cameraPosition, minCameraPosition, maxCameraPosition);
-            
+            // Camera logic
             _camera.CenterOn(PlayerController.GetPlayerPosition());
 
             // Animation logic
             InputController.Update();
             PlayerController.Update(gameTime, _tiledMap.WidthInPixels, _tiledMap.HeightInPixels, _map.CanMoveTo);
-
-            // Todo: remove this after
-            // Log.Information("{0}", _map.GetTileFromPosition(PlayerController.GetPlayerPosition()).GetBound());
 
 
             // If connected to the server, checks the player info sent to the server to see if they are done.
@@ -148,8 +136,10 @@ namespace Project_B_Client_App
             GameController.CheckServerPlayerInfoCalls();
             GameController.OtherPlayers.ForEach(op => op.Update(gameTime));
 
-            // todo: remove debug feature
-            // SetTilesWithMouse();
+            if (Globals.IsDebugging)
+            {
+                _debugTools.SetTilesWithMouse(_camera, _map);
+            }
 
             base.Update(gameTime);
         }
@@ -161,16 +151,20 @@ namespace Project_B_Client_App
         protected override void Draw(GameTime gameTime)
         {
             // Background color
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // Draw all game objects
-            _spriteBatch.Begin(transformMatrix: _camera.TranslationMatrix, samplerState: SamplerState.PointClamp);
+            _spriteBatch.Begin(transformMatrix: _camera.TranslationMatrix);
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             _tiledMapRenderer.Draw(_camera.TranslationMatrix);
             GameController.OtherPlayers.ForEach(op => op.Draw(_spriteBatch, _spriteFont));
             PlayerController.DrawPlayer(_spriteBatch, _spriteFont);
             
             // TODO: this is a debug feature. Turn it off later :)
-            // _map.Draw(_spriteBatch, _pixel);
+            if (Globals.IsDebugging)
+            {
+                _map.Draw(_spriteBatch, _pixel);
+            }
             
             _spriteBatch.End();
 
@@ -180,40 +174,11 @@ namespace Project_B_Client_App
         protected override void OnExiting(object sender, EventArgs args)
         {
             Log.Information("Exiting game...");
-            // todo remove later
-            File.WriteAllLines("tiles.txt", _tileCode.ToArray());
-            Log.Information("Saving tiles to textfile");
+            if (Globals.IsDebugging)
+            {
+                _debugTools.SaveTileCode();
+            }
             base.OnExiting(sender, args);
-        }
-
-
-        // Debug feature
-        private void SetTilesWithMouse()
-        {
-            var mouse = Mouse.GetState();
-            Vector2 mousePosition = mouse.Position.ToVector2();
-            Vector2 worldPosition = _camera.ScreenToWorld(mousePosition);
-
-            if (mouse.LeftButton == ButtonState.Pressed && _mouseReleased)
-            {
-                _mouseReleased = false;
-                var tilePoint = _map.GetTileFromPosition(worldPosition).GetTilePosition();
-                if (_map.GetTileFromPosition(worldPosition).GetTileType() == TileType.Blocked)
-                {
-                    _map.GetTileFromPosition(worldPosition).SetTileType(TileType.Walkable);
-                    _tileCode.Add($"_tileMap[{tilePoint.X}, {tilePoint.Y}].SetTileType(TileType.Walkable);");
-                    Log.Information("Tile set to walkable at {0}", tilePoint);
-                }
-                else
-                {
-                    _map.GetTileFromPosition(worldPosition).SetTileType(TileType.Blocked);
-                    _tileCode.Remove($"_tileMap[{tilePoint.X}, {tilePoint.Y}].SetTileType(TileType.Walkable);");
-                }
-            }
-            else if (_mouseReleased == false && mouse.LeftButton == ButtonState.Released)
-            {
-                _mouseReleased = true;
-            }
         }
     }
 }

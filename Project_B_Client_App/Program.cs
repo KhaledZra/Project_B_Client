@@ -30,6 +30,14 @@ if(args.Length == 0)
         Log.Error(e, "Error starting launcher");
     }
 }
+else if (args.Length == 1)
+{
+    if (args[0] == "debug")
+    {
+        Globals.IsDebugging = true;
+        Log.Information("Debug mode enabled");
+    }
+}
 
 // Loading config
 try
