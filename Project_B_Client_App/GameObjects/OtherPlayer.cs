@@ -76,8 +76,14 @@ public class OtherPlayer : GameObject
         
         // Calculate font position
         var fontPos = _position;
-        fontPos.Y -= 18;
-        fontPos.X -= 13;
+
+        // Measure the size of the string
+        Vector2 stringSize = spriteFont.MeasureString(_playerNickName);
+
+        // Adjust the position to center the text above the player
+        fontPos.X -= stringSize.X / 8f;
+        fontPos.Y -= stringSize.Y / 2f;
+
         spriteBatch.DrawString(spriteFont, _playerNickName, fontPos, Color.White, 0f, Vector2.Zero, Vector2.One / 4.0f, SpriteEffects.None, 0f);
     }
 }

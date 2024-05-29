@@ -1,3 +1,6 @@
 ## Game client that connects to the server!
 
-https://www.monogameextended.net/docs/features/tiled/tiled
+This is a prototype game client that connects to my server.
+Game is made using Monogame and C#.
+
+This is also part of my Thesis project.
