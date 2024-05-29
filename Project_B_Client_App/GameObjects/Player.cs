@@ -3,13 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project_B_Client_App.Controllers;
-using Project_B_Client_App.Interface;
-using Serilog;
 
 namespace Project_B_Client_App.GameObjects;
 
 // The player object
-public class Player : GameObject, IDrawableObject
+public class Player : GameObject
 {
     private Texture2D _texture;
     private Vector2 _position;
