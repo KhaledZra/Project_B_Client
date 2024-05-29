@@ -53,8 +53,6 @@ namespace Project_B_Client_App
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             // Create player that spawns in a set spot on the map
             PlayerController.InitializePlayer(
                 this.Content,
@@ -83,7 +81,6 @@ namespace Project_B_Client_App
         /// </summary>
         protected override void LoadContent()
         {
-            // TODO: use this.Content to load your game content here
             _tiledMap = Content.Load<TiledMap>("Map/samplemap_2");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
 

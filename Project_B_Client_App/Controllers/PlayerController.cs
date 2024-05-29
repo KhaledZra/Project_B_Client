@@ -18,7 +18,7 @@ public static class PlayerController
             0f,
             Globals.Config.PlayerAsset,
             0f,
-            new Random(Guid.NewGuid().GetHashCode()).Next().ToString(),  // TODO: Change later to get the player name from the UI
+            new Random(Guid.NewGuid().GetHashCode()).Next().ToString(),
             contentManager,
             Globals.Config.PlayerName);
     }
@@ -35,9 +35,14 @@ public static class PlayerController
         
         // Calculate font position
         var fontPos = _player.GetPlayerPosition;
-        // todo fix this logic
-        fontPos.Y -= font.MeasureString(_player.GetPlayerNickName).Y / 2.0f;
-        fontPos.X -= 13;
+
+        // Measure the size of the string
+        Vector2 stringSize = font.MeasureString(_player.GetPlayerNickName);
+
+        // Adjust the position to center the text above the player
+        fontPos.X -= stringSize.X / 8f;
+        fontPos.Y -= stringSize.Y / 2f;
+
         spriteBatch.DrawString(font, _player.GetPlayerNickName, fontPos, Color.White, 0f, Vector2.Zero, Vector2.One / 4.0f, SpriteEffects.None, 0f);
     }
 

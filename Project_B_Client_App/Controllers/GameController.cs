@@ -13,13 +13,11 @@ namespace Project_B_Client_App.Controllers;
 // The controller for the game, mostly to reduce clutter in the main class and to keep the game logic separate
 public static class GameController
 {
-    // Todo: refactor this later.
     public static readonly ServerHubConnectionService ServerHubConnectionService = new();
     private static Task _serverCall = ServerHubConnectionService.StartConnection();
     private static bool _isConnected = false;
     private static List<Task> _serverPlayerInfoCalls = new();
-
-    // Todo: maybe move this to it's own class
+    
     public static List<OtherPlayer> OtherPlayers { get; set; } = new();
 
     public static void ConnectToServer()

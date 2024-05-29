@@ -58,8 +58,6 @@ public class OtherPlayer : GameObject
     
     public void Update(GameTime gameTime)
     {
-        // TODO: Fix the desync. Currently very bad on server side
-        
         if (_directions.Count > 0)
         {
             _position = _directions[0].GetPosition;
