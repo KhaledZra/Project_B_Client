@@ -19,7 +19,7 @@ https://www.monogameextended.net/docs/features/animations/
 
 ### Ingame screenshots
 
-#### game launcher (made in WPF)
+#### game launcher (made in WPF, so this is a seperate project)
 ![Skärmbild 2024-05-28 173154](https://github.com/KhaledZra/Project_B_Client/assets/113167422/215c0243-b093-4f89-8a18-afe01f221876)
 
 #### Showcasing four clients that are connected to the live server
