@@ -2,6 +2,14 @@
 
 This is a prototype game client that connects to my server.
 Game is made using Monogame and C#.
+Although the project has many flaws and issues this is my first time ever working with MonoGame and attempting to create an online experience. Was very fun and challenging. Very happy with the result non the less. :D
+
+#### Some cool features:
+- The fully self made tile map.
+- Self made camera that follows the player and clamps to the maps borders
+- Very well synced with the server, so you will see each other in real time.
+- Animations (when moving around) synced well between clients
+- A cool debugger/edittor feature that allowed me to map colliders
 
 This is also part of my Thesis project.
 
